@@ -66,11 +66,56 @@ if MAIN:
 
     # repeating 
     arr_repeat = einops.repeat(arr[0], "c h w -> c h (repeat w)", repeat=3)
-    display_array_as_img(arr_repeat)
+    #display_array_as_img(arr_repeat)
 # %%
 if MAIN:
     # basically multiplying the batch size by the width -> displaying in a row 
     arr_stacked = einops.rearrange(arr, "b c h w -> c h (b w)")
     print(arr_stacked.shape)
     display_array_as_img(arr_stacked)  # plotting all images, stacked in a row
+# %%
+# 1 column stacking 
+if MAIN:
+    arr1 = einops.rearrange(arr, "b c h w -> c (b h) w") 
+    display_array_as_img(arr1)
+# %%
+# 2 column-stacking and copying 
+if MAIN:
+    arr2 = einops.repeat(arr[0], "c h w -> c (repeat h) w", repeat = 2)
+    display_array_as_img(arr2)
+# %%
+# 3 row-stacking and double-copying 
+if MAIN:
+    #arr_0s = einops.repeat(arr[0], "c h w -> c h (repeat w)", repeat = 2)
+    #arr_1s = einops.repeat(arr[1], "c h w -> c h (repeat w)", repeat = 2)
+    #arr3 = einops.rearrange([arr_0s,arr_1s], "b c h w -> c (b h) w")
+    # better solution - don't need to separate out elements 
+    arr3 = einops.repeat(arr[0:2], "b c h w -> c (b h) (2 w)")
+    display_array_as_img(arr3)
+
+# %%
+# 4 stretching 
+if MAIN:
+    arr4 = einops.repeat(arr[0], "c h w -> c (h repeat) w", repeat=2)
+    display_array_as_img(arr4)
+# %%
+# 5 split channels 
+if MAIN:
+    arr5 = einops.rearrange(arr[0], "c h w -> h (c w)")
+    display_array_as_img(arr5)
+# %%
+# 6 stack into rows & cols 
+if MAIN:
+    arr6 = einops.rearrange(arr, "(b1 b2) c h w -> c (b1 h) (b2 w)", b1=2)
+    display_array_as_img(arr6)
+# %%
+# 7 transpose 
+if MAIN:
+    arr7 = einops.rearrange(arr[1], "c h w -> c w h")
+    display_array_as_img(arr7)
+# %%
+# 8 shrinking 
+if MAIN:
+    arr8 = einops.reduce(arr, "(b1 b2) c (h h2) (w w2)-> c (b1 h) (b2 w)", "max", h2=2, w2=2, b1=2)
+    display_array_as_img(arr8)
 # %%
